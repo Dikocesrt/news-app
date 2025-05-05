@@ -35,6 +35,8 @@ func ConvertErrorCode(err error) int {
 			return http.StatusBadRequest
 		case ErrUnauthorized:
 			return http.StatusUnauthorized
+		case ErrCustomPageAlreadyExists:
+			return http.StatusConflict
 		case ErrInvalidCustomPageID:
 			return http.StatusBadRequest
 		case ErrInvalidCustomURL:

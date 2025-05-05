@@ -44,9 +44,9 @@ func (r Route) InitializeRoute(e *echo.Echo) {
 
 	Route.POST("/comments", r.commentController.CreateComment)
 
-	Route.POST("/custom-page", r.customPageController.CreateCustomPage)
-	Route.GET("/custom-page", r.customPageController.GetAllCustomPages)
-	Route.GET("/custom-page/:id", r.customPageController.GetCustomPageByID)
-	Route.PUT("/custom-page/:id", r.customPageController.UpdateCustomPage)
-	Route.DELETE("/custom-page/:id", r.customPageController.DeleteCustomPage)
+	Route.POST("/custom-pages", r.customPageController.CreateCustomPage)
+	Route.GET("/custom-pages", r.customPageController.GetAllCustomPages)
+	Route.GET("/custom-pages/:id", r.customPageController.GetCustomPageByID)
+	Route.PUT("/custom-pages/:id", r.customPageController.UpdateCustomPage)
+	Route.DELETE("/custom-pages/:id", r.customPageController.DeleteCustomPage)
 }

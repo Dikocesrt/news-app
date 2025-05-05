@@ -21,8 +21,8 @@ func NewCustomPageController(customPageUsecase entities.CustomPageUsecaseInterfa
 }
 
 type CustomPageRequest struct {
-	CustomURL string `json:"custom_url"`
-	Content string `json:"content"`
+	CustomURL string `json:"custom_url" form:"custom_url"`
+	Content string `json:"content" form:"content"`
 }
 
 type CustomPageResponseID struct {
