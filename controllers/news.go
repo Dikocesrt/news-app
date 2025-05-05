@@ -198,7 +198,7 @@ func (c NewsController) DeleteNews(ctx echo.Context) error {
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
 	}
-	_, err := utils.GetIDFromToken(token)
+	userID, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
@@ -206,7 +206,7 @@ func (c NewsController) DeleteNews(ctx echo.Context) error {
 	IDParam := ctx.Param("id")
 	id, _ := strconv.Atoi(IDParam)
 
-	err = c.newsUsecase.DeleteNews(uint(id))
+	err = c.newsUsecase.DeleteNews(uint(id), userID)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}

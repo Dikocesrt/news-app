@@ -145,11 +145,15 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 	}, nil
 }
 
-func (c NewsRepository) DeleteNews(newsID uint) error {
+func (c NewsRepository) DeleteNews(newsID uint, userID uint) error {
 	var newsDB models.News
 
 	if err := c.DB.Where("id = ?", newsID).First(&newsDB).Error; err != nil {
 		return utils.ErrInvalidNewsID
+	}
+
+	if newsDB.UserID != userID {
+		return utils.ErrUnauthorized
 	}
 
 	if err := c.DB.Delete(&newsDB).Error; err != nil {

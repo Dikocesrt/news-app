@@ -41,6 +41,6 @@ func (c NewsUsecase) UpdateNews(news entities.News) (entities.News, error) {
 	return c.newsRepository.UpdateNews(news)
 }
 
-func (c NewsUsecase) DeleteNews(newsID uint) error {
-	return c.newsRepository.DeleteNews(newsID)
+func (c NewsUsecase) DeleteNews(newsID uint, userID uint) error {
+	return c.newsRepository.DeleteNews(newsID, userID)
 }

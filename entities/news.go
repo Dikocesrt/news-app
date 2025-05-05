@@ -13,7 +13,7 @@ type NewsUsecaseInterface interface {
 	GetAllNews(metadata Metadata) ([]News, error)
 	GetNewsByID(newsID uint) (News, error)
 	UpdateNews(news News) (News, error)
-	DeleteNews(newsID uint) error
+	DeleteNews(newsID uint, userID uint) error
 }
 
 type NewsRepositoryInterface interface {
@@ -21,5 +21,5 @@ type NewsRepositoryInterface interface {
 	GetAllNews(metadata Metadata) ([]News, error)
 	GetNewsByID(newsID uint) (News, error)
 	UpdateNews(news News) (News, error)
-	DeleteNews(newsID uint) error
+	DeleteNews(newsID uint, userID uint) error
 }
