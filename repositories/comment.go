@@ -4,6 +4,7 @@ import (
 	"errors"
 	"makanan-app/entities"
 	"makanan-app/models"
+	"makanan-app/utils"
 
 	"gorm.io/gorm"
 )
@@ -20,6 +21,10 @@ func NewCommentRepository(db *gorm.DB) CommentRepository {
 
 func (c CommentRepository) CreateComment(comment entities.Comment) (entities.Comment, error) {
 	commentDB := models.NewComment(comment.Name, comment.Comment, comment.News.ID)
+
+	if err := c.DB.Where("id = ?", comment.News.ID).First(&models.News{}).Error; err != nil {
+		return entities.Comment{}, utils.ErrInvalidNewsID
+	}
 
 	if err := c.DB.Create(&commentDB).Error; err != nil {
 		return entities.Comment{}, errors.New("failed to create comment")
