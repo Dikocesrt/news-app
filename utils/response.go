@@ -3,26 +3,26 @@ package utils
 import "makanan-app/entities"
 
 type BaseSuccessResponse struct {
-	Status bool `json:"status"`
+	Status string `json:"status"`
 	Message string `json:"message"`
 	Data any `json:"data"`
 }
 
 type BaseMetadataSuccessResponse struct {
-	Status bool `json:"status"`
+	Status string `json:"status"`
 	Message string `json:"message"`
 	Metadata entities.Metadata `json:"metadata"`
 	Data any `json:"data"`
 }
 
 type BaseErrorResponse struct {
-	Status bool `json:"status"`
+	Status string `json:"status"`
 	Message string `json:"message"`
 }
 
 func NewBaseSuccessResponse(message string, data any) BaseSuccessResponse {
 	return BaseSuccessResponse{
-		Status: true,
+		Status: "success",
 		Message: message,
 		Data: data,
 	}
@@ -30,7 +30,7 @@ func NewBaseSuccessResponse(message string, data any) BaseSuccessResponse {
 
 func NewBaseMetadataSuccessResponse(message string, metadata entities.Metadata, data any) BaseMetadataSuccessResponse {
 	return BaseMetadataSuccessResponse{
-		Status: true,
+		Status: "success",
 		Message: message,
 		Metadata: metadata,
 		Data: data,
@@ -39,7 +39,7 @@ func NewBaseMetadataSuccessResponse(message string, metadata entities.Metadata, 
 
 func NewBaseErrorResponse(message string) BaseErrorResponse {
 	return BaseErrorResponse{
-		Status: false,
+		Status: "fail",
 		Message: message,
 	}
 }

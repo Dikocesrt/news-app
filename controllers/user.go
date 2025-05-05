@@ -32,7 +32,7 @@ func (u UserController) Register(c echo.Context) error {
 	var req userRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(utils.ConvertErrorCode(err), errors.New("internal server error"))
+		return c.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(errors.New("internal server error").Error()))
 	}
 
 	user := entities.User{
@@ -56,7 +56,7 @@ func (u UserController) Login(c echo.Context) error {
 	var req userRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(utils.ConvertErrorCode(err), errors.New("internal server error"))
+		return c.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(errors.New("internal server error").Error()))
 	}
 
 	user := entities.User{
