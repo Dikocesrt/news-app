@@ -16,7 +16,7 @@ func NewNewsUsecase(newsRepository entities.NewsRepositoryInterface) NewsUsecase
 }
 
 func (c NewsUsecase) CreateNews(news entities.News) (entities.News, error) {
-	if news.Content == "" || news.CategoryID == 0 || news.UserID == 0 {
+	if news.Content == "" || news.Category.ID == 0 || news.User.ID == 0 {
 		return entities.News{}, utils.ErrEmptyField
 	}
 
@@ -32,7 +32,7 @@ func (c NewsUsecase) GetNewsByID(newsID uint) (entities.News, error) {
 }
 
 func (c NewsUsecase) UpdateNews(news entities.News) (entities.News, error) {
-	if news.Content == "" || news.CategoryID == 0 || news.UserID == 0 {
+	if news.Content == "" || news.Category.ID == 0 || news.User.ID == 0 {
 		return entities.News{}, utils.ErrEmptyField
 	}
 	

@@ -10,61 +10,71 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type CategoryController struct {
-	categoryUsecase entities.CategoryUsecaseInterface
+type NewsController struct {
+	newsUsecase entities.NewsUsecaseInterface
 }
 
-func NewCategoryController(categoryUsecase entities.CategoryUsecaseInterface) CategoryController {
-	return CategoryController{
-		categoryUsecase: categoryUsecase,
+func NewNewsController(newsUsecase entities.NewsUsecaseInterface) NewsController {
+	return NewsController{
+		newsUsecase: newsUsecase,
 	}
 }
 
-type categoryRequest struct {
-	Name string `json:"name" form:"name"`
+type newsRequest struct {
+	Content     string `json:"content"`
+	CategoryID  uint   `json:"category_id"`
 }
 
-type categoryResponseID struct {
-	ID   uint `json:"id"`
+type newsResponseID struct {
+	ID uint `json:"id"`
 }
 
-type CategoryResponse struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+type newsResponse struct {
+	ID         uint   `json:"id"`
+	Content    string `json:"content"`
+	Category CategoryResponse `json:"category"`
+	User       userReponse `json:"user"`
 }
 
-func (c CategoryController) CreateCategory(ctx echo.Context) error {
+type userReponse struct {
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+}
+
+func (c NewsController) CreateNews(ctx echo.Context) error {
 	token := ctx.Request().Header.Get("Authorization")
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
 	}
-	_, err := utils.GetIDFromToken(token)
+	userID, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	req := categoryRequest{}
+	req := newsRequest{}
 	if err := ctx.Bind(&req); err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(errors.New("internal server error").Error()))
 	}
 
-	category := entities.Category{
-		Name: req.Name,
+	news := entities.News{
+		User:       entities.User{ID: userID},
+		Content:    req.Content,
+		Category:   entities.Category{ID: req.CategoryID},
 	}
 
-	newCategory, err := c.categoryUsecase.CreateCategory(category)
+	newNews, err := c.newsUsecase.CreateNews(news)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	categoryResponse := categoryResponseID{
-		ID: newCategory.ID,
+	newsResponse := newsResponseID{
+		ID: newNews.ID,
 	}
 
-	return ctx.JSON(http.StatusCreated, utils.NewBaseSuccessResponse("success create category", categoryResponse))
+	return ctx.JSON(http.StatusCreated, utils.NewBaseSuccessResponse("success create news", newsResponse))
 }
 
-func (c CategoryController) GetAllCategories(ctx echo.Context) error {
+func (c NewsController) GetAllNews(ctx echo.Context) error {
 	token := ctx.Request().Header.Get("Authorization")
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
@@ -79,23 +89,31 @@ func (c CategoryController) GetAllCategories(ctx echo.Context) error {
 
 	metadata := entities.GetMetadata(page, limit)
 
-	categories, err := c.categoryUsecase.GetAllCategories(metadata)
+	news, err := c.newsUsecase.GetAllNews(metadata)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	var categoriesResponse []CategoryResponse
-	for _, category := range categories {
-		categoriesResponse = append(categoriesResponse, CategoryResponse{
-			ID:   category.ID,
-			Name: category.Name,
+	var newssResponse []newsResponse
+	for _, new := range news {
+		newssResponse = append(newssResponse, newsResponse{
+			ID:         new.ID,
+			Content:    new.Content,
+			Category: CategoryResponse{
+				ID:   new.Category.ID,
+				Name: new.Category.Name,
+			},
+			User: userReponse{
+				ID:       new.User.ID,
+				Username: new.User.Username,
+			},
 		})
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseMetadataSuccessResponse("success get all categories", metadata, categoriesResponse))
+	return ctx.JSON(http.StatusOK, utils.NewBaseMetadataSuccessResponse("success get all news", metadata, newssResponse))
 }
 
-func (c CategoryController) GetCategoryByID(ctx echo.Context) error {
+func (c NewsController) GetNewsByID(ctx echo.Context) error {
 	token := ctx.Request().Header.Get("Authorization")
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
@@ -108,20 +126,28 @@ func (c CategoryController) GetCategoryByID(ctx echo.Context) error {
 	IDParam := ctx.Param("id")
 	id, _ := strconv.Atoi(IDParam)
 
-	category, err := c.categoryUsecase.GetCategoryByID(uint(id))
+	news, err := c.newsUsecase.GetNewsByID(uint(id))
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	categoryResponse := CategoryResponse{
-		ID:   category.ID,
-		Name: category.Name,
+	newsResponse := newsResponse{
+		ID:         news.ID,
+		Content:    news.Content,
+		Category: CategoryResponse{
+			ID:   news.Category.ID,
+			Name: news.Category.Name,
+		},
+		User: userReponse{
+			ID:       news.User.ID,
+			Username: news.User.Username,
+		},
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success get category by id", categoryResponse))
+	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success get news by id", newsResponse))
 }
 
-func (c CategoryController) UpdateCategory(ctx echo.Context) error {
+func (c NewsController) UpdateNews(ctx echo.Context) error {
 	token := ctx.Request().Header.Get("Authorization")
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
@@ -134,25 +160,28 @@ func (c CategoryController) UpdateCategory(ctx echo.Context) error {
 	IDParam := ctx.Param("id")
 	id, _ := strconv.Atoi(IDParam)
 
-	req := categoryRequest{}
+	req := newsRequest{}
 	if err := ctx.Bind(&req); err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(errors.New("internal server error").Error()))
 	}
 
-	category := entities.Category{
-		ID:   uint(id),
-		Name: req.Name,
+	news := entities.News{
+		ID:         uint(id),
+		Content:    req.Content,
+		Category: entities.Category{
+			ID: req.CategoryID,
+		},
 	}
 
-	_, err = c.categoryUsecase.UpdateCategory(category)
+	_, err = c.newsUsecase.UpdateNews(news)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success update category", struct{}{}))
+	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success update news", struct{}{}))
 }
 
-func (c CategoryController) DeleteCategory(ctx echo.Context) error {
+func (c NewsController) DeleteNews(ctx echo.Context) error {
 	token := ctx.Request().Header.Get("Authorization")
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
@@ -165,10 +194,10 @@ func (c CategoryController) DeleteCategory(ctx echo.Context) error {
 	IDParam := ctx.Param("id")
 	id, _ := strconv.Atoi(IDParam)
 
-	err = c.categoryUsecase.DeleteCategory(uint(id))
+	err = c.newsUsecase.DeleteNews(uint(id))
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success delete category", struct{}{}))
+	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success delete news", struct{}{}))
 }

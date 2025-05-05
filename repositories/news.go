@@ -20,7 +20,7 @@ func NewNewsRepository(db *gorm.DB) NewsRepository {
 }
 
 func (c NewsRepository) CreateNews(news entities.News) (entities.News, error) {
-	newsDB := models.NewNews(news.Content, news.CategoryID, news.UserID)
+	newsDB := models.NewNews(news.Content, news.Category.ID, news.User.ID)
 
 	if err := c.DB.Create(&newsDB).Error; err != nil {
 		return entities.News{}, errors.New("failed to create news")
@@ -29,8 +29,12 @@ func (c NewsRepository) CreateNews(news entities.News) (entities.News, error) {
 	return entities.News{
 		ID:         newsDB.ID,
 		Content:    newsDB.Content,
-		CategoryID: newsDB.CategoryID,
-		UserID:     newsDB.UserID,
+		Category: entities.Category{
+			ID: newsDB.CategoryID,
+		},
+		User: entities.User{
+			ID: newsDB.UserID,
+		},
 	}, nil
 }
 
@@ -46,8 +50,12 @@ func (c NewsRepository) GetAllNews(metadata entities.Metadata) ([]entities.News,
 		news = append(news, entities.News{
 			ID:         newsDB.ID,
 			Content:    newsDB.Content,
-			CategoryID: newsDB.CategoryID,
-			UserID:     newsDB.UserID,
+			Category: entities.Category{
+				ID: newsDB.CategoryID,
+			},
+			User: entities.User{
+				ID: newsDB.UserID,
+			},
 		})
 	}
 
@@ -64,8 +72,12 @@ func (c NewsRepository) GetNewsByID(newsID uint) (entities.News, error) {
 	return entities.News{
 		ID:         newsDB.ID,
 		Content:    newsDB.Content,
-		CategoryID: newsDB.CategoryID,
-		UserID:     newsDB.UserID,
+		Category: entities.Category{
+			ID: newsDB.CategoryID,
+		},
+		User: entities.User{
+			ID: newsDB.UserID,
+		},
 	}, nil
 }
 
@@ -77,8 +89,8 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 	}
 
 	newsDB.Content = news.Content
-	newsDB.CategoryID = news.CategoryID
-	newsDB.UserID = news.UserID
+	newsDB.CategoryID = news.Category.ID
+	newsDB.UserID = news.User.ID
 	if err := c.DB.Save(&newsDB).Error; err != nil {
 		return entities.News{}, errors.New("failed to update news")
 	}
@@ -86,8 +98,12 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 	return entities.News{
 		ID:         newsDB.ID,
 		Content:    newsDB.Content,
-		CategoryID: newsDB.CategoryID,
-		UserID:     newsDB.UserID,
+		Category: entities.Category{
+			ID: newsDB.CategoryID,
+		},
+		User: entities.User{
+			ID: newsDB.UserID,
+		},
 	}, nil
 }
 

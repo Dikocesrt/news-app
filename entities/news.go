@@ -1,10 +1,10 @@
 package entities
 
 type News struct {
-	ID         uint   `json:"id"`
-	Content    string `json:"content"`
-	CategoryID uint   `json:"category_id"`
-	UserID     uint   `json:"user_id"`
+	ID         uint
+	Content    string
+	Category Category
+	User       User
 }
 
 type NewsUsecaseInterface interface {
