@@ -10,10 +10,10 @@ import (
 )
 
 type UserUsecase struct {
-	userRepository entities.RepositoryInterface
+	userRepository entities.UserRepositoryInterface
 }
 
-func NewUserUsecase(userRepository entities.RepositoryInterface) UserUsecase {
+func NewUserUsecase(userRepository entities.UserRepositoryInterface) UserUsecase {
 	return UserUsecase{
 		userRepository: userRepository,
 	}

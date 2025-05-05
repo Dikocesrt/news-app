@@ -7,12 +7,12 @@ type User struct {
 	Token string
 }
 
-type RepositoryInterface interface {
+type UserRepositoryInterface interface {
 	Register(user User) (User, error)
 	Login(user User) (User, error)
 }
 
-type UsecaseInterface interface {
+type UserUsecaseInterface interface {
 	Register(user User) (User, error)
 	Login(user User) (User, error)
 }

@@ -5,10 +5,18 @@ type Category struct {
 	Name string
 }
 
-type CategoryRepository interface {
-
+type CategoryRepositoryInterface interface {
+	CreateCategory(category Category) (Category, error)
+	GetAllCategories(metadata Metadata) ([]Category, error)
+	GetCategoryByID(categoryID uint) (Category, error)
+	UpdateCategory(category Category) (Category, error)
+	DeleteCategory(categoryID uint) error
 }
 
-type CategoryUsecase interface {
-	
+type CategoryUsecaseInterface interface {
+	CreateCategory(category Category) (Category, error)
+	GetAllCategories(metadata Metadata) ([]Category, error)
+	GetCategoryByID(categoryID uint) (Category, error)
+	UpdateCategory(category Category) (Category, error)
+	DeleteCategory(categoryID uint) error
 }

@@ -32,10 +32,10 @@ func (c CategoryRepository) CreateCategory(category entities.Category) (entities
 	}, nil
 }
 
-func (c CategoryRepository) GetAllCategories() ([]entities.Category, error) {
+func (c CategoryRepository) GetAllCategories(metadata entities.Metadata) ([]entities.Category, error) {
 	var categoriesDB []models.Category
 
-	if err := c.DB.Find(&categoriesDB).Error; err != nil {
+	if err := c.DB.Limit(metadata.Limit).Offset(metadata.GetOffset()).Find(&categoriesDB).Error; err != nil {
 		return []entities.Category{}, errors.New("failed to get categories")
 	}
 
