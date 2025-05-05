@@ -31,14 +31,21 @@ type newsResponseID struct {
 
 type newsResponse struct {
 	ID         uint   `json:"id"`
-	Content    string `json:"content"`
 	Category CategoryResponse `json:"category"`
 	User       userReponse `json:"user"`
+	Content    string `json:"content"`
+	Comment    []CommentResponse `json:"comments"`
 }
 
 type userReponse struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
+}
+
+type CommentResponse struct {
+	ID      uint   `json:"id"`
+	Name    string `json:"name"`
+	Comment string `json:"comment"`
 }
 
 func (c NewsController) CreateNews(ctx echo.Context) error {
@@ -96,6 +103,15 @@ func (c NewsController) GetAllNews(ctx echo.Context) error {
 
 	var newssResponse []newsResponse
 	for _, new := range news {
+		var comments []CommentResponse
+		for _, comment := range new.Comments {
+			comments = append(comments, CommentResponse{
+				ID:      comment.ID,
+				Name:    comment.Name,
+				Comment: comment.Comment,
+			})
+		}
+
 		newssResponse = append(newssResponse, newsResponse{
 			ID:         new.ID,
 			Content:    new.Content,
@@ -107,6 +123,7 @@ func (c NewsController) GetAllNews(ctx echo.Context) error {
 				ID:       new.User.ID,
 				Username: new.User.Username,
 			},
+			Comment: comments,
 		})
 	}
 
@@ -131,6 +148,15 @@ func (c NewsController) GetNewsByID(ctx echo.Context) error {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
+	var comments []CommentResponse
+	for _, comment := range news.Comments {
+		comments = append(comments, CommentResponse{
+			ID:      comment.ID,
+			Name:    comment.Name,
+			Comment: comment.Comment,
+		})
+	}
+
 	newsResponse := newsResponse{
 		ID:         news.ID,
 		Content:    news.Content,
@@ -142,6 +168,7 @@ func (c NewsController) GetNewsByID(ctx echo.Context) error {
 			ID:       news.User.ID,
 			Username: news.User.Username,
 		},
+		Comment: comments,
 	}
 
 	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success get news by id", newsResponse))

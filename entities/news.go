@@ -5,6 +5,7 @@ type News struct {
 	Content    string
 	Category Category
 	User       User
+	Comments   []Comment
 }
 
 type NewsUsecaseInterface interface {
