@@ -8,7 +8,11 @@ import (
 )
 
 func parseToken(token string) (*jwt.Token, error) {
-	tokenString := strings.Split(token, " ")[1]
+	parts := strings.Split(token, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return nil, ErrInvalidToken
+	}
+	tokenString := parts[1]
 	
 	result, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {

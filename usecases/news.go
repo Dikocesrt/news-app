@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"fmt"
 	"makanan-app/entities"
 	"makanan-app/utils"
 )
@@ -17,6 +18,7 @@ func NewNewsUsecase(newsRepository entities.NewsRepositoryInterface) NewsUsecase
 
 func (c NewsUsecase) CreateNews(news entities.News) (entities.News, error) {
 	if news.Content == "" || news.Category.ID == 0 || news.User.ID == 0 {
+		fmt.Println("content:", news.Content, "categoryID:", news.Category.ID, "userID:", news.User.ID)
 		return entities.News{}, utils.ErrEmptyField
 	}
 

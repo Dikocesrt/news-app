@@ -33,6 +33,7 @@ func (r UserRepository) Register(user entities.User) (entities.User, error) {
 	}
 
 	return entities.User{
+		ID:       userDB.ID,
 		Password: userDB.Password,
 		Username: userDB.Username,
 	}, nil
@@ -50,6 +51,7 @@ func (r UserRepository) Login(user entities.User) (entities.User, error) {
 	}
 
 	return entities.User{
+		ID:       userDB.ID,
 		Password: userDB.Password,
 		Username: userDB.Username,
 	}, nil

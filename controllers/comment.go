@@ -19,9 +19,9 @@ func NewCommentController(commentUsecase entities.CommentUsecaseInterface) Comme
 }
 
 type commentRequest struct {
-	Name    string `json:"name"`
-	Comment string `json:"comment"`
-	NewsID  uint   `json:"news_id"`
+	Name    string `json:"name" form:"name"`
+	Comment string `json:"comment" form:"comment"`
+	NewsID  uint   `json:"news_id" form:"news_id"`
 }
 
 func (c CommentController) CreateComment(ctx echo.Context) error {

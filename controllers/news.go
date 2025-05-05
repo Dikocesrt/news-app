@@ -21,8 +21,8 @@ func NewNewsController(newsUsecase entities.NewsUsecaseInterface) NewsController
 }
 
 type newsRequest struct {
-	Content     string `json:"content"`
-	CategoryID  uint   `json:"category_id"`
+	Content     string `json:"content" form:"content"`
+	CategoryID  uint   `json:"category_id" form:"category_id"`
 }
 
 type newsResponseID struct {
