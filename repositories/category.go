@@ -22,6 +22,10 @@ func NewCategoryRepository(db *gorm.DB) CategoryRepository {
 func (c CategoryRepository) CreateCategory(category entities.Category) (entities.Category, error) {
 	categoryDB := models.NewCategory(category.Name)
 
+	if err := c.DB.Where("name = ?", category.Name).First(&categoryDB).Error; err == nil {
+		return entities.Category{}, utils.ErrCategoryAlreadyExists
+	}
+
 	if err := c.DB.Create(&categoryDB).Error; err != nil {
 		return entities.Category{}, errors.New("failed to create category")
 	}
@@ -65,6 +69,10 @@ func (c CategoryRepository) GetCategoryByID(categoryID uint) (entities.Category,
 
 func (c CategoryRepository) UpdateCategory(category entities.Category) (entities.Category, error) {
 	var categoryDB models.Category
+
+	if err := c.DB.Where("name = ?", category.Name).First(&categoryDB).Error; err == nil {
+		return entities.Category{}, utils.ErrCategoryAlreadyExists
+	}
 
 	if err := c.DB.Where("id = ?", category.ID).First(&categoryDB).Error; err != nil {
 		return entities.Category{}, utils.ErrInvalidCategoryID

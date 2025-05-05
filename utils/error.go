@@ -10,6 +10,7 @@ var ErrUsernameAlreadyRegistered = errors.New("username already registered")
 var ErrInvalidToken = errors.New("invalid token")
 var ErrInvalidCredentials = errors.New("username or password is incorrect")
 var ErrInvalidCategoryID = errors.New("invalid category id")
+var ErrCategoryAlreadyExists = errors.New("category already exists")
 
 func ConvertErrorCode(err error) int {
 	switch err {
@@ -23,6 +24,8 @@ func ConvertErrorCode(err error) int {
 			return http.StatusUnauthorized
 		case ErrInvalidCategoryID:
 			return http.StatusBadRequest
+		case ErrCategoryAlreadyExists:
+			return http.StatusConflict
 		default:
 			return http.StatusInternalServerError
 	}

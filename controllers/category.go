@@ -24,13 +24,25 @@ type categoryRequest struct {
 	Name string `json:"name" form:"name"`
 }
 
-type categoryResponse struct {
+type categoryResponseID struct {
 	ID   uint `json:"id"`
+}
+
+type categoryResponse struct {
+	ID   uint   `json:"id"`
 	Name string `json:"name"`
-	Status string `json:"status"`
 }
 
 func (c CategoryController) CreateCategory(ctx echo.Context) error {
+	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
+	}
+	_, err := utils.GetIDFromToken(token)
+	if err != nil {
+		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
+	}
+
 	req := categoryRequest{}
 	if err := ctx.Bind(&req); err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(errors.New("internal server error").Error()))
@@ -45,7 +57,7 @@ func (c CategoryController) CreateCategory(ctx echo.Context) error {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	categoryResponse := categoryResponse{
+	categoryResponse := categoryResponseID{
 		ID: newCategory.ID,
 	}
 
@@ -53,16 +65,19 @@ func (c CategoryController) CreateCategory(ctx echo.Context) error {
 }
 
 func (c CategoryController) GetAllCategories(ctx echo.Context) error {
-	page := ctx.QueryParam("page")
-	limit := ctx.QueryParam("limit")
-
-	metadata := entities.GetMetadata(page, limit)
-
 	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
+	}
 	_, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
+
+	page := ctx.QueryParam("page")
+	limit := ctx.QueryParam("limit")
+
+	metadata := entities.GetMetadata(page, limit)
 
 	categories, err := c.categoryUsecase.GetAllCategories(metadata)
 	if err != nil {
@@ -81,14 +96,17 @@ func (c CategoryController) GetAllCategories(ctx echo.Context) error {
 }
 
 func (c CategoryController) GetCategoryByID(ctx echo.Context) error {
-	IDParam := ctx.Param("id")
-	id, _ := strconv.Atoi(IDParam)
-
 	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
+	}
 	_, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
+
+	IDParam := ctx.Param("id")
+	id, _ := strconv.Atoi(IDParam)
 
 	category, err := c.categoryUsecase.GetCategoryByID(uint(id))
 	if err != nil {
@@ -104,14 +122,17 @@ func (c CategoryController) GetCategoryByID(ctx echo.Context) error {
 }
 
 func (c CategoryController) UpdateCategory(ctx echo.Context) error {
-	IDParam := ctx.Param("id")
-	id, _ := strconv.Atoi(IDParam)
-
 	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
+	}
 	_, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
+
+	IDParam := ctx.Param("id")
+	id, _ := strconv.Atoi(IDParam)
 
 	req := categoryRequest{}
 	if err := ctx.Bind(&req); err != nil {
@@ -128,23 +149,26 @@ func (c CategoryController) UpdateCategory(ctx echo.Context) error {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success update category", categoryResponse{}))
+	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success update category", struct{}{}))
 }
 
 func (c CategoryController) DeleteCategory(ctx echo.Context) error {
-	IDParam := ctx.Param("id")
-	id, _ := strconv.Atoi(IDParam)
-
 	token := ctx.Request().Header.Get("Authorization")
+	if token == "" {
+		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
+	}
 	_, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
+
+	IDParam := ctx.Param("id")
+	id, _ := strconv.Atoi(IDParam)
 
 	err = c.categoryUsecase.DeleteCategory(uint(id))
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success delete category", categoryResponse{}))
+	return ctx.JSON(http.StatusOK, utils.NewBaseSuccessResponse("success delete category", struct{}{}))
 }

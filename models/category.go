@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Category struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(255);not null;unique"`
+	Name string `gorm:"type:varchar(255);not null"`
 }
 
 func (Category) TableName() string {

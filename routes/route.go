@@ -11,9 +11,10 @@ type Route struct {
 	categoryController controllers.CategoryController
 }
 
-func NewRoute(userController controllers.UserController) Route {
+func NewRoute(userController controllers.UserController, categoryController controllers.CategoryController) Route {
 	return Route{
 		userController: userController,
+		categoryController: categoryController,
 	}
 }
 

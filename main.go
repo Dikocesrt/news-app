@@ -19,7 +19,11 @@ func main() {
 	userUsecases := usecases.NewUserUsecase(userRepositories)
 	userController := controllers.NewUserController(userUsecases)
 
-	route := routes.NewRoute(userController)
+	categoryRepositories := repositories.NewCategoryRepository(db)
+	categoryUsecases := usecases.NewCategoryUsecase(categoryRepositories)
+	categoryController := controllers.NewCategoryController(categoryUsecases)
+
+	route := routes.NewRoute(userController, categoryController)
 
 	e := echo.New()
 	route.InitializeRoute(e)
