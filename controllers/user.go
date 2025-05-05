@@ -24,7 +24,7 @@ type userRequest struct {
 	Username string `json:"username" form:"username"`
 }
 
-type userResponse struct {
+type userResponseToken struct {
 	Token string `json:"token"`
 }
 
@@ -45,7 +45,7 @@ func (u UserController) Register(c echo.Context) error {
 		return c.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	userResponse := userResponse{
+	userResponse := userResponseToken{
 		Token: newUser.Token,
 	}
 
@@ -69,7 +69,7 @@ func (u UserController) Login(c echo.Context) error {
 		return c.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
 
-	userResponse := userResponse{
+	userResponse := userResponseToken{
 		Token: userLogin.Token,
 	}
 

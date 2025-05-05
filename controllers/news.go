@@ -32,12 +32,12 @@ type newsResponseID struct {
 type newsResponse struct {
 	ID         uint   `json:"id"`
 	Category CategoryResponse `json:"category"`
-	User       userReponse `json:"user"`
+	User       UserReponse `json:"user"`
 	Content    string `json:"content"`
 	Comment    []CommentResponse `json:"comments"`
 }
 
-type userReponse struct {
+type UserReponse struct {
 	ID       uint   `json:"id"`
 	Username string `json:"username"`
 }
@@ -110,7 +110,7 @@ func (c NewsController) GetAllNews(ctx echo.Context) error {
 				ID:   new.Category.ID,
 				Name: new.Category.Name,
 			},
-			User: userReponse{
+			User: UserReponse{
 				ID:       new.User.ID,
 				Username: new.User.Username,
 			},
@@ -146,7 +146,7 @@ func (c NewsController) GetNewsByID(ctx echo.Context) error {
 			ID:   news.Category.ID,
 			Name: news.Category.Name,
 		},
-		User: userReponse{
+		User: UserReponse{
 			ID:       news.User.ID,
 			Username: news.User.Username,
 		},

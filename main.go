@@ -31,7 +31,11 @@ func main() {
 	commentUsecases := usecases.NewCommentUsecase(commentRepositories)
 	commentController := controllers.NewCommentController(commentUsecases)
 
-	route := routes.NewRoute(userController, categoryController, newsController, commentController)
+	customPageRepositories := repositories.NewCustomPageRepository(db)
+	customPageUsecases := usecases.NewCustomPageUsecase(customPageRepositories)
+	customPageController := controllers.NewCustomPageController(customPageUsecases)
+
+	route := routes.NewRoute(userController, categoryController, newsController, commentController, customPageController)
 
 	e := echo.New()
 	route.InitializeRoute(e)

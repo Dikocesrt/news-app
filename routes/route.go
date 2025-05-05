@@ -11,14 +11,16 @@ type Route struct {
 	categoryController controllers.CategoryController
 	newsController controllers.NewsController
 	commentController controllers.CommentController
+	customPageController controllers.CustomPageController
 }
 
-func NewRoute(userController controllers.UserController, categoryController controllers.CategoryController, newsController controllers.NewsController, commentController controllers.CommentController) Route {
+func NewRoute(userController controllers.UserController, categoryController controllers.CategoryController, newsController controllers.NewsController, commentController controllers.CommentController, customPageController controllers.CustomPageController) Route {
 	return Route{
 		userController: userController,
 		categoryController: categoryController,
 		newsController: newsController,
 		commentController: commentController,
+		customPageController: customPageController,
 	}
 }
 
@@ -41,4 +43,10 @@ func (r Route) InitializeRoute(e *echo.Echo) {
 	Route.DELETE("/news/:id", r.newsController.DeleteNews)
 
 	Route.POST("/comments", r.commentController.CreateComment)
+
+	Route.POST("/custom-page", r.customPageController.CreateCustomPage)
+	Route.GET("/custom-page", r.customPageController.GetAllCustomPages)
+	Route.GET("/custom-page/:id", r.customPageController.GetCustomPageByID)
+	Route.PUT("/custom-page/:id", r.customPageController.UpdateCustomPage)
+	Route.DELETE("/custom-page/:id", r.customPageController.DeleteCustomPage)
 }

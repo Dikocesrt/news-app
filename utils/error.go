@@ -13,6 +13,9 @@ var ErrInvalidCategoryID = errors.New("invalid category id")
 var ErrCategoryAlreadyExists = errors.New("category already exists")
 var ErrInvalidNewsID = errors.New("invalid news id")
 var ErrUnauthorized = errors.New("unauthorized")
+var ErrCustomPageAlreadyExists = errors.New("custom page already exists")
+var ErrInvalidCustomPageID = errors.New("invalid custom page id")
+var ErrInvalidCustomURL = errors.New("custom url must not contain spaces")
 
 func ConvertErrorCode(err error) int {
 	switch err {
@@ -32,6 +35,10 @@ func ConvertErrorCode(err error) int {
 			return http.StatusBadRequest
 		case ErrUnauthorized:
 			return http.StatusUnauthorized
+		case ErrInvalidCustomPageID:
+			return http.StatusBadRequest
+		case ErrInvalidCustomURL:
+			return http.StatusBadRequest
 		default:
 			return http.StatusInternalServerError
 	}
