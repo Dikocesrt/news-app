@@ -12,6 +12,7 @@ var ErrInvalidCredentials = errors.New("username or password is incorrect")
 var ErrInvalidCategoryID = errors.New("invalid category id")
 var ErrCategoryAlreadyExists = errors.New("category already exists")
 var ErrInvalidNewsID = errors.New("invalid news id")
+var ErrUnauthorized = errors.New("unauthorized")
 
 func ConvertErrorCode(err error) int {
 	switch err {
@@ -29,6 +30,8 @@ func ConvertErrorCode(err error) int {
 			return http.StatusConflict
 		case ErrInvalidNewsID:
 			return http.StatusBadRequest
+		case ErrUnauthorized:
+			return http.StatusUnauthorized
 		default:
 			return http.StatusInternalServerError
 	}

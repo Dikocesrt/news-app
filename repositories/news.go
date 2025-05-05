@@ -122,6 +122,10 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 		return entities.News{}, utils.ErrInvalidNewsID
 	}
 
+	if newsDB.UserID != news.User.ID {
+		return entities.News{}, utils.ErrUnauthorized
+	}
+
 	newsDB.Content = news.Content
 	newsDB.CategoryID = news.Category.ID
 	newsDB.UserID = news.User.ID

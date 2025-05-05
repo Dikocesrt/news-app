@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type News struct {
 	gorm.Model
-	Content string `gorm:"type:varchar(255);not null"`
+	Content string `gorm:"type:text;not null"`
 	CategoryID uint `gorm:"column:category_id;not null;index"`
 	Category Category `gorm:"foreignKey:CategoryID"`
 	UserID uint `gorm:"column:user_id;not null;index"`

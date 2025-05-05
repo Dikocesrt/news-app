@@ -161,7 +161,7 @@ func (c NewsController) UpdateNews(ctx echo.Context) error {
 	if token == "" {
 		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
 	}
-	_, err := utils.GetIDFromToken(token)
+	userID, err := utils.GetIDFromToken(token)
 	if err != nil {
 		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
 	}
@@ -179,6 +179,9 @@ func (c NewsController) UpdateNews(ctx echo.Context) error {
 		Content:    req.Content,
 		Category: entities.Category{
 			ID: req.CategoryID,
+		},
+		User: entities.User{
+			ID: userID,
 		},
 	}
 
