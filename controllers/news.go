@@ -82,15 +82,6 @@ func (c NewsController) CreateNews(ctx echo.Context) error {
 }
 
 func (c NewsController) GetAllNews(ctx echo.Context) error {
-	token := ctx.Request().Header.Get("Authorization")
-	if token == "" {
-		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
-	}
-	_, err := utils.GetIDFromToken(token)
-	if err != nil {
-		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
-	}
-
 	page := ctx.QueryParam("page")
 	limit := ctx.QueryParam("limit")
 
@@ -131,15 +122,6 @@ func (c NewsController) GetAllNews(ctx echo.Context) error {
 }
 
 func (c NewsController) GetNewsByID(ctx echo.Context) error {
-	token := ctx.Request().Header.Get("Authorization")
-	if token == "" {
-		return ctx.JSON(http.StatusUnauthorized, utils.NewBaseErrorResponse("unauthorized"))
-	}
-	_, err := utils.GetIDFromToken(token)
-	if err != nil {
-		return ctx.JSON(utils.ConvertErrorCode(err), utils.NewBaseErrorResponse(err.Error()))
-	}
-
 	IDParam := ctx.Param("id")
 	id, _ := strconv.Atoi(IDParam)
 
