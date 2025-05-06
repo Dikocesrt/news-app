@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"errors"
-	"makanan-app/entities"
-	"makanan-app/utils"
 	"net/http"
 	"strconv"
+	"test-indonesia-cakap-digital/entities"
+	"test-indonesia-cakap-digital/utils"
 
 	"github.com/labstack/echo/v4"
 )

@@ -1,6 +1,6 @@
 package utils
 
-import "makanan-app/entities"
+import "test-indonesia-cakap-digital/entities"
 
 type BaseSuccessResponse struct {
 	Status string `json:"status"`

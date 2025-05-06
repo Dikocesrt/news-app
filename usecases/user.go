@@ -2,9 +2,9 @@ package usecases
 
 import (
 	"errors"
-	"makanan-app/entities"
-	"makanan-app/middlewares"
-	"makanan-app/utils"
+	"test-indonesia-cakap-digital/entities"
+	"test-indonesia-cakap-digital/middlewares"
+	"test-indonesia-cakap-digital/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )

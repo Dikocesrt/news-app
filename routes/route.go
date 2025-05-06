@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"makanan-app/controllers"
+	"test-indonesia-cakap-digital/controllers"
 
 	"github.com/labstack/echo/v4"
 )

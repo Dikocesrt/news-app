@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"makanan-app/entities"
-	"makanan-app/utils"
+	"test-indonesia-cakap-digital/entities"
+	"test-indonesia-cakap-digital/utils"
 )
 
 type CommentUsecase struct {

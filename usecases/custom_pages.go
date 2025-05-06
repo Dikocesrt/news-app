@@ -1,9 +1,9 @@
 package usecases
 
 import (
-	"makanan-app/entities"
-	"makanan-app/utils"
 	"strings"
+	"test-indonesia-cakap-digital/entities"
+	"test-indonesia-cakap-digital/utils"
 )
 
 type CustomPageUsecase struct {

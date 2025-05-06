@@ -1,11 +1,11 @@
 package main
 
 import (
-	"makanan-app/configs"
-	"makanan-app/controllers"
-	"makanan-app/repositories"
-	"makanan-app/routes"
-	"makanan-app/usecases"
+	"test-indonesia-cakap-digital/configs"
+	"test-indonesia-cakap-digital/controllers"
+	"test-indonesia-cakap-digital/repositories"
+	"test-indonesia-cakap-digital/routes"
+	"test-indonesia-cakap-digital/usecases"
 
 	"github.com/labstack/echo/v4"
 )

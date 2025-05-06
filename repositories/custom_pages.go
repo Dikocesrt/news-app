@@ -2,9 +2,9 @@ package repositories
 
 import (
 	"errors"
-	"makanan-app/entities"
-	"makanan-app/models"
-	"makanan-app/utils"
+	"test-indonesia-cakap-digital/entities"
+	"test-indonesia-cakap-digital/models"
+	"test-indonesia-cakap-digital/utils"
 
 	"gorm.io/gorm"
 )

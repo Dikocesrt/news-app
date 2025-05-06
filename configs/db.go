@@ -2,7 +2,7 @@ package configs
 
 import (
 	"fmt"
-	"makanan-app/models"
+	"test-indonesia-cakap-digital/models"
 
 	"os"
 	"strconv"
