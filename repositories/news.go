@@ -100,6 +100,19 @@ func (c NewsRepository) GetNewsByID(newsID uint) (entities.News, error) {
 		})
 	}
 
+	var newsTagsDB []models.NewsTag
+	if err := c.DB.Where("news_id = ?", newsID).Preload("Tag").Find(&newsTagsDB).Error; err != nil {
+		return entities.News{}, errors.New("failed to get tags")
+	}
+
+	var tags []entities.Tag
+	for _, t := range newsTagsDB {
+		tags = append(tags, entities.Tag{
+			ID:   t.TagID,
+			Name: t.Tag.Name,
+		})
+	}
+
 	return entities.News{
 		ID:         newsDB.ID,
 		Content:    newsDB.Content,
@@ -111,6 +124,7 @@ func (c NewsRepository) GetNewsByID(newsID uint) (entities.News, error) {
 			ID: newsDB.UserID,
 			Username: newsDB.User.Username,
 		},
+		Tags: tags,
 		Comments: comments,
 	}, nil
 }
@@ -133,6 +147,20 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 		return entities.News{}, errors.New("failed to update news")
 	}
 
+	if err := c.DB.Where("news_id = ?", news.ID).Delete(&models.NewsTag{}).Error; err != nil {
+		return entities.News{}, errors.New("failed to delete old tags")
+	}
+
+	for _, tag := range news.Tags {
+		newsTag := models.NewsTag{
+			NewsID: news.ID,
+			TagID:  tag.ID,
+		}
+		if err := c.DB.Create(&newsTag).Error; err != nil {
+			return entities.News{}, errors.New("failed to associate new tags")
+		}
+	}
+
 	return entities.News{
 		ID:         newsDB.ID,
 		Content:    newsDB.Content,
@@ -142,6 +170,7 @@ func (c NewsRepository) UpdateNews(news entities.News) (entities.News, error) {
 		User: entities.User{
 			ID: newsDB.UserID,
 		},
+		Tags: news.Tags,
 	}, nil
 }
 

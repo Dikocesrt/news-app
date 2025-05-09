@@ -6,6 +6,7 @@ type News struct {
 	Category Category
 	User       User
 	Comments   []Comment
+	Tags []Tag
 }
 
 type NewsUsecaseInterface interface {

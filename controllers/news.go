@@ -23,6 +23,7 @@ func NewNewsController(newsUsecase entities.NewsUsecaseInterface) NewsController
 type newsRequest struct {
 	Content     string `json:"content" form:"content"`
 	CategoryID  uint   `json:"category_id" form:"category_id"`
+	TagIDs     []uint `json:"tag_ids" form:"tag_ids"`
 }
 
 type newsResponseID struct {
@@ -34,7 +35,13 @@ type newsResponse struct {
 	Category CategoryResponse `json:"category"`
 	User       UserReponse `json:"user"`
 	Content    string `json:"content"`
+	Tags       []tagResponse `json:"tags"`
 	Comment    []CommentResponse `json:"comments"`
+}
+
+type tagResponse struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
 }
 
 type UserReponse struct {
@@ -139,6 +146,14 @@ func (c NewsController) GetNewsByID(ctx echo.Context) error {
 		})
 	}
 
+	var tags []tagResponse
+	for _, tag := range news.Tags {
+		tags = append(tags, tagResponse{
+			ID:   tag.ID,
+			Name: tag.Name,
+		})
+	}
+
 	newsResponse := newsResponse{
 		ID:         news.ID,
 		Content:    news.Content,
@@ -150,6 +165,7 @@ func (c NewsController) GetNewsByID(ctx echo.Context) error {
 			ID:       news.User.ID,
 			Username: news.User.Username,
 		},
+		Tags:    tags,
 		Comment: comments,
 	}
 
@@ -183,6 +199,11 @@ func (c NewsController) UpdateNews(ctx echo.Context) error {
 		User: entities.User{
 			ID: userID,
 		},
+		Tags: make([]entities.Tag, len(req.TagIDs)),
+	}
+
+	for i, tagID := range req.TagIDs {
+		news.Tags[i] = entities.Tag{ID: tagID}
 	}
 
 	_, err = c.newsUsecase.UpdateNews(news)
