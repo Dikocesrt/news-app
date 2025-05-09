@@ -16,6 +16,7 @@ var ErrUnauthorized = errors.New("unauthorized")
 var ErrCustomPageAlreadyExists = errors.New("custom page already exists")
 var ErrInvalidCustomPageID = errors.New("invalid custom page id")
 var ErrInvalidCustomURL = errors.New("custom url must not contain spaces")
+var ErrTagAlreadyExists = errors.New("tag already exists")
 
 func ConvertErrorCode(err error) int {
 	switch err {
@@ -41,6 +42,8 @@ func ConvertErrorCode(err error) int {
 			return http.StatusBadRequest
 		case ErrInvalidCustomURL:
 			return http.StatusBadRequest
+		case ErrTagAlreadyExists:
+			return http.StatusConflict
 		default:
 			return http.StatusInternalServerError
 	}
