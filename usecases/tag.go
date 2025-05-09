@@ -9,7 +9,7 @@ type TagUsecase struct {
 	tagRepository entities.TagRepositoryInterface
 }
 
-func NewTypeUsecase(tagRepository entities.TagRepositoryInterface) TagUsecase {
+func NewTagUsecase(tagRepository entities.TagRepositoryInterface) TagUsecase {
 	return TagUsecase{
 		tagRepository: tagRepository,
 	}
